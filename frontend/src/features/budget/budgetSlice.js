@@ -40,6 +40,20 @@ export const deleteTransaction = createAsyncThunk('budget/delete', async (id, th
   }
 });
 
+// 4. Update Transaction
+export const updateTransaction = createAsyncThunk('budget/update', async (txData, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+    
+    // Sends the ID in the URL and the data (name/amount) in the body
+    const response = await axios.put(`${API_URL}${txData.id}`, txData, config);
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data.message);
+  }
+});
+
 const budgetSlice = createSlice({
   name: 'budget',
   initialState: { transactions: [], isLoading: false, isError: false, message: '' },
@@ -56,6 +70,12 @@ const budgetSlice = createSlice({
       })
       .addCase(deleteTransaction.fulfilled, (state, action) => {
         state.transactions = state.transactions.filter(t => t._id !== action.payload.id);
+      })
+      .addCase(updateTransaction.fulfilled, (state, action) => {
+        const index = state.transactions.findIndex(t => t._id === action.payload._id);
+        if (index !== -1) {
+          state.transactions[index] = action.payload;
+        }
       });
   }
 });
