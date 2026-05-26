@@ -75,3 +75,14 @@ exports.updateTransaction = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+exports.clearTransactions = async (req, res) => {
+  try {
+    // Delete all transactions where the user matches req.user.id
+    await Transaction.deleteMany({ user: req.user.id });
+    
+    res.status(200).json({ message: 'All transactions cleared successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};

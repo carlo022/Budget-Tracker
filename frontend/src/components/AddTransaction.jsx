@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import { addTransaction } from "../features/budget/budgetSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { CATEGORIES } from "../constants/categories";
+import { Trash2 } from 'lucide-react';
+import { clearTransactions } from "../features/budget/budgetSlice";
 
 const AddTransaction = () => {
   const [type, setType] = useState("expense");
@@ -11,6 +13,7 @@ const AddTransaction = () => {
   const [amount, setAmount] = useState("");
   const dispatch = useDispatch();
   const [category, setCategory] = useState(CATEGORIES[0]);
+  const { transactions } = useSelector((state) => state.budget);
 
   // FIX 1: HandleSubmit must be INSIDE the component to access state and dispatch
   const handleSubmit = (e) => {
@@ -35,6 +38,16 @@ const AddTransaction = () => {
 
     setName("");
     setAmount("");
+  };
+
+  const handleClearAll = () => {
+    if (
+      window.confirm(
+        "⚠️ WARNING: This will permanently delete ALL of your logged transactions. This action cannot be undone! Are you absolutely sure?"
+      )
+    ) {
+      dispatch(clearTransactions());
+    }
   };
 
   return (
@@ -117,6 +130,16 @@ const AddTransaction = () => {
           Add Transaction
         </button>
       </form>
+      {transactions.length > 0 && (
+        <button
+          type="button"
+          onClick={handleClearAll}
+          className="w-full flex items-center justify-center gap-2 mt-4 px-4 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors cursor-pointer"
+        >
+          <Trash2 size={14} />
+          Clear All Data
+        </button>
+      )}
     </div>
   );
 };

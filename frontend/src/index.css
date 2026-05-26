@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@layer utilities {
+  /* Subtle dot-matrix overlay for a premium tech texture */
+  .bg-dot-grid {
+    background-image: radial-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+  
+  /* Hide scrollbars cleanly for filter elements */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

@@ -54,6 +54,28 @@ export const updateTransaction = createAsyncThunk('budget/update', async (txData
   }
 });
 
+// 5. Clear All Transactions
+export const clearTransactions = createAsyncThunk(
+  'budget/clearAll',
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      
+      // FIXED: Now correctly references the API_URL variable ('.../api/transactions/clear')
+      const response = await axios.delete(`${API_URL}clear`, config);
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const budgetSlice = createSlice({
   name: 'budget',
   initialState: { transactions: [], isLoading: false, isError: false, message: '' },
@@ -76,8 +98,20 @@ const budgetSlice = createSlice({
         if (index !== -1) {
           state.transactions[index] = action.payload;
         }
+      })
+      .addCase(clearTransactions.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(clearTransactions.fulfilled, (state) => {
+        state.isLoading = false;
+        state.transactions = []; // Wipe out local history state instantly!
+      })
+      .addCase(clearTransactions.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
-  }
+  },
 });
 
 export const { resetBudget } = budgetSlice.actions;
