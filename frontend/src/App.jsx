@@ -9,10 +9,16 @@ import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
-    <>
+    <div
+      className="min-h-screen w-full"
+      style={{
+        backgroundImage: `radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #10b981 100%)`,
+        backgroundSize: "100% 100%",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <Router>
-        <div className="min-h-screen bg-slate-50">
-          <Navbar />
+          <Navbar/>
           <main className="max-w-5xl mx-auto p-4">
             <Routes>
               {/* Public Routes */}
@@ -27,11 +33,10 @@ function App() {
               <Route path="*" element={<Navigate to="/login" replace />} /> {/* Redirect to dashboard or a 404 component */}
             </Routes>
           </main>
-        </div>
       </Router>
       {/* ToastContainer allows the toasts to appear anywhere in the app */}
       <ToastContainer position="top-right" autoClose={3000} />
-    </>
+    </div>
   );
 }
 
