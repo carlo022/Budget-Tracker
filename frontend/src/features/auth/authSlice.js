@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // The base URL for your backend auth routes
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/users/';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/users/` || 'http://localhost:5000/api/users/';
 
 // 1. Get user from localStorage (This keeps the session alive after refresh)
 const user = JSON.parse(localStorage.getItem('user'));
